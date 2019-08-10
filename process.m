@@ -37,7 +37,7 @@ for frameIndex = 1:size(X,1)
     P = update_MSC(X_t,P,alpha,alpha_MSC);
     
     for k = 1:half_bin
-        [G(k),SNR(frameIndex,k)] = getweights2(P.Fvv,k,d);
+        [G(k),SNR(frameIndex,k)] = getweights4(P.Fvv,k,d);
     end
     Y(frameIndex,:) = Y(frameIndex,:).*G;
     

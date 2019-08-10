@@ -90,21 +90,12 @@ for frameIndex = 1:size(X_source,1)
     Fvv_all_est(frameIndex,1,2,:) = exp(1j*omega*tau).*SNR(frameIndex,:)./(SNR(frameIndex,:)+1)+...
                                     1./(SNR(frameIndex,:)+1);
     for k = 1:half_bin
-        [G,SNR_predict(frameIndex,k)] = getweights4(P_x.Fvv,k,d);
+        [G(k),SNR_predict(frameIndex,k)] = getweights4(P_x.Fvv,k,d);
     end
-    G = sqrt(SNR(frameIndex,k)./(1+SNR(frameIndex,k)));
+%     G = sqrt(SNR(frameIndex,k)./(1+SNR(frameIndex,k)));
     
     Y(frameIndex,:) = Y(frameIndex,:).*G;
-%     for k = 1:N_FFT/2+1
-%         Fvv_all_est(frameIndex,1,2,k) = (cos(omega(k)*tau)+1j*sin(omega(k)*tau))*SNR(frameIndex,k)/(SNR(frameIndex,k)+1)+...
-%                                 1/(SNR(frameIndex,k)+1);
-%     end
-
-%     Fvv_all_est(frameIndex,1,2,:) = squeeze(P_s.Fvv(1,2,:)).'.*SNR(frameIndex,:)./(SNR(frameIndex,:)+1)+...
-%                                     squeeze(P_i.Fvv(1,2,:)).'./(SNR(frameIndex,:)+1);
-    
-
-    
+   
 end
 y = istft(Y);
 Fvv = P_s.Fvv;
