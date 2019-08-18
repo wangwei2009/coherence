@@ -14,18 +14,18 @@ function [ sig ] = signal_simulation( r,slice )
 %
 % Created by Wang wei
 %% generate diffuse noise
-[ noise,Pos] = noise_gen_URA(r);
+[ noise,Pos] = sim.noise_gen_URA(r);
 
 noise = noise'/500;
 %% signal simulation 
-pathname = '../../sound/';
+pathname = 'wav/';
 
 % use a clean speech audio as desired signal
-[speech ,fs] = audioread([pathname,'S_29_04.wav']);
+[speech ,fs] = audioread([pathname,'S_01_01.wav']);
 [interference] = audioread([pathname,'S_72_09.wav']);
 
-s      = generate_signal(speech,[0,0],r,1,0.2);
-interf = generate_signal(interference,[90,0],r,1,0.2);
+s      = sim.generate_signal(speech,[0,0],r,1,0.2);
+interf = sim.generate_signal(interference,[90,0],r,1,0.2);
 
 % signal+interference+diffuse noise
 len_min = min(min(size(s,1),size(interf,1)),size(noise,1));

@@ -50,7 +50,7 @@ source_pos = [x1,y1,z1];                         % Source position [x y z] (m)
 
 N = 4;                                           % number of sensor
 
-h = RIR_generator_URA( source_pos,beta,r);
+h = sim.RIR_generator_URA( source_pos,beta,r);
 h = h*scale;
 x = zeros(length(source)+size(h,2)-1,N);
 for i=1:N

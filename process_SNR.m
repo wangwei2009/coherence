@@ -66,6 +66,8 @@ tau = fs*d/c;
 alpha = 0.8;
 alpha_MSC = 0;
 % X_interf = X_source;
+Gmin = 0.1;
+method = 2;
 for frameIndex = 1:size(X_source,1)
     
     SNR_L(frameIndex,:) = real(P_s.Pxii(1,:)./P_i.Pxii(1,:));
@@ -90,7 +92,7 @@ for frameIndex = 1:size(X_source,1)
     Fvv_all_est(frameIndex,1,2,:) = exp(1j*omega*tau).*SNR(frameIndex,:)./(SNR(frameIndex,:)+1)+...
                                     1./(SNR(frameIndex,:)+1);
     for k = 1:half_bin
-        [G(k),SNR_predict(frameIndex,k)] = getweights4(P_x.Fvv,k,d);
+        [G(k),SNR_predict(frameIndex,k)] = getweights(P_x.Fvv,k,d,Gmin,method);
     end
 %     G = sqrt(SNR(frameIndex,k)./(1+SNR(frameIndex,k)));
     

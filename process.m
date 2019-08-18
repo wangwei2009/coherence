@@ -30,14 +30,16 @@ SNR = zeros(size(X,1),half_bin);
 % output spectral
 Y = squeeze(X(:,1,:));
 
-alpha = 0.8;
+alpha = 0.68;
 alpha_MSC = 0;
 for frameIndex = 1:size(X,1)
     X_t = squeeze(X(frameIndex,:,:));
     P = update_MSC(X_t,P,alpha,alpha_MSC);
     
+    Gmin = 0.1;
+    method = 4;
     for k = 1:half_bin
-        [G(k),SNR(frameIndex,k)] = getweights4(P.Fvv,k,d);
+        [G(k),SNR(frameIndex,k)] = getweights(P.Fvv,k,d,Gmin,method);
     end
     Y(frameIndex,:) = Y(frameIndex,:).*G;
     

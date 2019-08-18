@@ -12,14 +12,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close all
 clear all;
-addpath(genpath('../../../../lib'));
+addpath(genpath('lib'));
 
 % array spacing
 d = 0.0213;
 r = d/2; 
 
 slice = [1,3];
-[ sig ] = signal_simulation( r,slice );
+[ sig ] = sim.signal_simulation( r,slice );
 
 ang = [0,0]*pi/180;
 
@@ -86,7 +86,7 @@ legend(['coherence of source at frame  ',int2str(frame)],...
 figure,plot(10*log10(SNR(frame,:)));title(['true SNR(dB) at frame ',int2str(frame)])
 
 speech = sig.speech;
-[pesq_mos]= pesq_vec(speech, out,fs)
+% [pesq_mos]= pesq_vec(speech, out,fs)
 % visual( x(:,1),out );
-
+rmpath(genpath('lib'));
 
