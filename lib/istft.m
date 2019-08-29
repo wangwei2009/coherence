@@ -28,7 +28,8 @@ if nargin < 3
    inc = frameLength/2;
 end
 if nargin < 5
-    window = sqrt(hann(frameLength));
+    window = sqrt(hann(frameLength+1));
+    window = window(1:end-1);
 end
 
 frameNum = size(Y,1);            % channel
