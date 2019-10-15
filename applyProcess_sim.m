@@ -22,10 +22,20 @@ fs = 16000;
 
 angle = [0,0]/180*pi;
 % array spacing
-d = 0.0213;
+d = 0.025;
 r = d/2; 
 
-slice = [1,3];
+switch 1
+    case 1
+        slice = [1,3]; % extract speaker-1
+        disp('speaker-1 is in front of mic1')
+    case 2
+        slice = [2,4]; % extract speaker-2
+        disp('speaker-2 is in front of mic2')
+    otherwise
+        disp('other value')
+end
+
 [ sig ] = sim.signal_simulation( r,slice );
 x = sig.x;
 
@@ -37,7 +47,6 @@ overlap = 128;
 inc = frameLength - overlap;
 N_FFT = 256;
 
-
 x1 = x;
 
 %% process
@@ -48,7 +57,7 @@ x1 = x;
 speech = sig.speech;
 % [pesq_mos]= pesq_vec(speech, out,fs)
 rmpath(genpath('lib'));
-util.visual( x(:,1),out );
+visual( x(:,1),out );
 % util.fig(out, fs);
 
 

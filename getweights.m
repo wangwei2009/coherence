@@ -86,8 +86,8 @@ function [G, SNR] = getweights(Fvv, k, d, Gmin, method)
             DDR = (abs(Fn)^2 - abs(Fvv(1, 2, k))^2) / ...
                 (abs(Fvv(1, 2, k))^2 - 1);
             K = DDR / (DDR + 1);
-            theta = 90 * pi / 180; % interference broadside
-            ata = 0 * pi / 180; % target endfire
+            theta = 90 * pi / 180; % 90,interference broadside
+            ata = 0 * pi / 180; % 0,target endfire
             omega = 2 * pi * (k - 1) / N_FFT;
             tao = fs * d / c;
             omega_ = omega * tao;
@@ -135,8 +135,8 @@ function [G, SNR] = getweights(Fvv, k, d, Gmin, method)
             DDR = (abs(Fn)^2 - abs_Fvv2^2) / ...
                 (abs_Fvv2^2 - 1);
             K = DDR / (DDR + 1);
-            theta = 90 * pi / 180; % interference broadside
-            ata = 0 * pi / 180; % target endfire
+            theta = 90 * pi / 180; % 90,interference broadside
+            ata = 0 * pi / 180; % 0,target endfire
             %                 omega = 2*pi*k/N_FFT;
             omega = 2 * (k - 1) / N_FFT;
             tao = fs * d / c;
@@ -192,7 +192,7 @@ function [G, SNR] = getweights(Fvv, k, d, Gmin, method)
                 (abs_Fvv2^2 - 1);
             K = DDR / (DDR + 1);
             %                 K = 1;
-            theta_s = 90 * pi / 180; % target,endfire
+            theta_s = 90 * pi / 180; % 90,target,endfire
             theta_i = 0 * pi / 180; % interference ,broadside
             constant = 2 * pi * (k - 1) * fs * d / ((N_FFT * c));
             sin_alpha = sin(constant * sin(theta_s));
