@@ -28,9 +28,9 @@ overlap = 128;
 inc = frameLength - overlap;
 N_FFT = 256;
 % test xmos 4-mic circular array recordings
-x = loadwav('wav/xmos/rec96/');
+x = loadwav('wav/xmos/rec/');
 d = 0.064;
-switch 2
+switch 1
     case 1
         x = x(:,[1,3]); % extract speaker-1
         disp('speaker-1 is in front of mic1')
@@ -45,13 +45,13 @@ x1 = x;
 
 %% process
 
-[ out,Fvv2,SNR] = process(x1,d);
+[ y,Fvv2,SNR] = process(x1,d);
 
 %% evaluate
 speech = sig.speech;
 % [pesq_mos]= pesq_vec(speech, out,fs)
 %rmpath(genpath('lib'));
-visual( x(:,1),out );
+visual( x(:,1),y );
 % util.fig(out, fs);
 
 

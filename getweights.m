@@ -86,13 +86,13 @@ function [G, SNR] = getweights(Fvv, k, d, Gmin, method)
             DDR = (abs(Fn)^2 - abs(Fvv(1, 2, k))^2) / ...
                 (abs(Fvv(1, 2, k))^2 - 1);
             K = DDR / (DDR + 1);
-            theta = 90 * pi / 180; % 90,interference broadside
+            %theta = 0 * pi / 180; % 90,interference broadside
             ata = 0 * pi / 180; % 0,target endfire
             omega = 2 * pi * (k - 1) / N_FFT;
             tao = fs * d / c;
             omega_ = omega * tao;
             beta = omega_ * cos(ata);
-            alpha = omega_ * cos(theta);
+            %alpha = omega_ * cos(theta);
             constant = 2 * pi * k * fs * d / ((N_FFT * c));
 
             % K = 1;
@@ -105,6 +105,8 @@ function [G, SNR] = getweights(Fvv, k, d, Gmin, method)
                 (A^2 + B^2); % eq.14
             SNR = (sin_alpha - Fy_imag) / ...
                 (Fy_imag - sin(beta)); % eq.10
+            SNR = (sin_alpha - Fy_imag) / ...
+                (Fy_imag); % eq.10
             G = sqrt(SNR / ...
                 (SNR + 1));
             SNR = G / (1 - G);
@@ -135,14 +137,14 @@ function [G, SNR] = getweights(Fvv, k, d, Gmin, method)
             DDR = (abs(Fn)^2 - abs_Fvv2^2) / ...
                 (abs_Fvv2^2 - 1);
             K = DDR / (DDR + 1);
-            theta = 90 * pi / 180; % 90,interference broadside
+            %theta = 0 * pi / 180; % 90,interference broadside
             ata = 0 * pi / 180; % 0,target endfire
             %                 omega = 2*pi*k/N_FFT;
             omega = 2 * (k - 1) / N_FFT;
             tao = fs * d / c;
             omega_ = omega * tao;
             beta = pi * omega_ * cos(ata);
-            alpha = omega_ * cos(theta);
+            %alpha = omega_ * cos(theta);
             constant = 2 * pi * k * fs * d / ((N_FFT * c));
 
             % if we set K = 1,then this method is same as method2
@@ -193,7 +195,7 @@ function [G, SNR] = getweights(Fvv, k, d, Gmin, method)
             K = DDR / (DDR + 1);
             %                 K = 1;
             theta_s = 90 * pi / 180; % 90,target,endfire
-            theta_i = 0 * pi / 180; % interference ,broadside
+            %theta_i = 0 * pi / 180; % interference ,broadside
             constant = 2 * pi * (k - 1) * fs * d / ((N_FFT * c));
             sin_alpha = sin(constant * sin(theta_s));
             cos_alpha = cos(constant * sin(theta_s));
