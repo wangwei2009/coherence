@@ -110,6 +110,43 @@ function [G, SNR] = getweights(Fvv, k, d, Gmin, method)
             G = sqrt(SNR / ...
                 (SNR + 1));
             SNR = G / (1 - G);
+        case 5
+            % refer to "A coherence-based noise reduction algorithm for binaural hearing aids"
+            % broadside ,coherent
+
+            k_optimal = 1;
+            SPECTRAL_FLOOR = 0.4;
+            Fvv_UPPER = 0.98;
+            Fy_real = real(Fvv(1, 2, k));
+            Fy_imag = imag(Fvv(1, 2, k));
+            Fn = sin(2 * pi * k * fs * dij * k_optimal / c / N_FFT) ./ (2 * pi * k * fs * dij * k_optimal / c / N_FFT);
+            %                 Fn = sinc(2*pi*k*fs*d/(N_FFT*c));
+
+            DDR = (abs(Fn)^2 - abs(Fvv(1, 2, k))^2) / ...
+                (abs(Fvv(1, 2, k))^2 - 1);
+            K = DDR / (DDR + 1);
+            %theta = 0 * pi / 180; % 90,interference broadside
+            ata = 0 * pi / 180; % 0,target endfire
+            omega = 2 * pi * (k - 1) / N_FFT;
+            tao = fs * d / c;
+            omega_ = omega * tao;
+            beta = omega_ * cos(ata);
+            %alpha = omega_ * cos(theta);
+            constant = 2 * pi * k * fs * d / ((N_FFT * c));
+
+            % K = 1;
+            A = Fy_imag - sin(omega_);
+            B = cos(omega_) - Fy_real;
+            C = Fy_real * sin(omega_) - Fy_imag * cos(omega_);
+            T = 1 - Fy_real * cos(omega_) - Fy_imag * sin(omega_);
+
+            sin_alpha = (2*(1-Fy_real)*Fy_imag) / ...
+                         ((1-Fy_real)^2+Fy_imag^2); % eq.19
+            SNR = (sin_alpha - Fy_imag) / ...
+                (Fy_imag); % eq.19
+            G = sqrt(SNR / ...
+                (SNR + 1));
+            SNR = G / (1 - G);
         case 3
             %
             %
