@@ -52,10 +52,21 @@ N = 4;                                           % number of sensor
 
 h = sim.RIR_generator_URA( source_pos,beta,r);
 h = h*scale;
-x = zeros(length(source)+size(h,2)-1,N);
-for i=1:N
-    x(:,i) = conv(source,h(i,:));
+if 1
+    x = zeros(length(source)+size(h,2)-1,N);
+    for i=1:N
+        x(:,i) = conv(source,h(i,:));
+    end
+else
+    H = getRIR();
+%     H = H(:,[1,3],[2,5]);
+    x = zeros(length(source)+size(H,1)-1,N);
+    for i=1:N
+        x(:,i) = conv(source,H(:,i+1));
+    end
 end
+
+
 
 if nargout>1
     varargin{1} = h;
