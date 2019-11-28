@@ -14,9 +14,10 @@ function [ sig ] = signal_simulation( r,slice )
 %
 % Created by Wang wei
 %% generate diffuse noise
-[ noise,Pos] = sim.noise_gen_URA(r);
-
-noise = noise'/500;
+% [ noise,Pos] = sim.noise_gen_URA(r);
+addpath(genpath('ANF-Generator-master'));
+noise = sim.gen_babble_speech(4,r,5);
+% noise = noise'/500;
 %% signal simulation 
 pathname = 'wav/';
 
@@ -32,8 +33,8 @@ len_min = min(min(size(s,1),size(interf,1)),size(noise,1));
 % slice = [1,3];
 clean_s = s(1:len_min,slice);
 clean_i = interf(1:len_min,slice);
-clean_n = noise(1:len_min,slice);
-switch 2
+clean_n = noise(1:len_min,slice)/2;
+switch 1
     case 1
         x = clean_s+clean_i+clean_n;
     case 2
@@ -63,6 +64,6 @@ sig.clean_s = clean_s;
 sig.clean_i = clean_i;
 sig.clean_n = clean_n;
 sig.x = x;
-
+rmpath(genpath('./ANF-Generator-master'));
 end
 
