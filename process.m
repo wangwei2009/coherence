@@ -39,8 +39,8 @@ Y = squeeze(X(:,1,:));
 alpha = 0.60;
 alpha_MSC = 0;
 
-iNumFilts = 40*3;
-aad_H     = ComputeFilterResponse(iNumFilts, N_FFT);
+iNumFilts = 40;
+%aad_H     = ComputeFilterResponse(iNumFilts, N_FFT);
 
 for frameIndex = 1:size(X,1)
     X_t = squeeze(X(frameIndex,:,:));
@@ -54,11 +54,11 @@ for frameIndex = 1:size(X,1)
     end
     ad_X_Bar = squeeze(mean(X(frameIndex,:,:))).';
     G(1:16) = sqrt(G(1:16));
-    [aad_X_tilde] = ChannelWeighting(ad_X_Bar,G,aad_H);
+%     [aad_X_tilde] = ChannelWeighting(ad_X_Bar,G,aad_H);
     
 %     aad_X_tilde(1:8) = ad_X_Bar(1:8);
-    Y(frameIndex,:) = aad_X_tilde;
-%     Y(frameIndex,:) = Y(frameIndex,:).*G;
+%     Y(frameIndex,:) = aad_X_tilde;
+    Y(frameIndex,:) = Y(frameIndex,:).*G;
 %     Y(frameIndex,:) = squeeze(mean(X(frameIndex,:,:))).'.*G;
     
 end
