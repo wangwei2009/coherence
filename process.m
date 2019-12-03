@@ -21,7 +21,10 @@ else
     method = 3;
 end;
 
-X = stft(x,512,512,256);
+frameLength = 512;
+N_FFT = 1024;
+inc = 256;
+X = stft(x,N_FFT,frameLength,inc);
 N_FFT = (size(X,3)-1)*2;
 N = size(x,2);
 half_bin = size(X,3);
@@ -35,12 +38,13 @@ SNR = zeros(size(X,1),half_bin);
 
 % output spectral
 Y = squeeze(X(:,1,:));
+Y = squeeze((X(:,1,:)+X(:,2,:))/2);
 
 alpha = 0.60;
 alpha_MSC = 0;
 
 iNumFilts = 40;
-%aad_H     = ComputeFilterResponse(iNumFilts, N_FFT);
+aad_H     = ComputeFilterResponse(iNumFilts, N_FFT);
 
 for frameIndex = 1:size(X,1)
     X_t = squeeze(X(frameIndex,:,:));
@@ -54,7 +58,7 @@ for frameIndex = 1:size(X,1)
     end
     ad_X_Bar = squeeze(mean(X(frameIndex,:,:))).';
     G(1:16) = sqrt(G(1:16));
-%     [aad_X_tilde] = ChannelWeighting(ad_X_Bar,G,aad_H);
+    [aad_X_tilde] = ChannelWeighting(ad_X_Bar,G,aad_H);
     
 %     aad_X_tilde(1:8) = ad_X_Bar(1:8);
 %     Y(frameIndex,:) = aad_X_tilde;
@@ -62,7 +66,7 @@ for frameIndex = 1:size(X,1)
 %     Y(frameIndex,:) = squeeze(mean(X(frameIndex,:,:))).'.*G;
     
 end
-y = istft(Y,512,512,256);
+y = istft(Y,N_FFT,frameLength,inc);
 scale = 1.5;
 y = real(y)*scale;
 Fvv = P.Fvv;

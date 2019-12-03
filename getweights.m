@@ -32,6 +32,13 @@ dij = d;
 
 Fy_real = real(Fvv(1, 2, k));
 Fy_imag = imag(Fvv(1, 2, k));
+k_optimal = 1;
+if k>1
+    Fn = sin(2 * pi * (k-1) * fs * dij * k_optimal / c / N_FFT) ./...
+            (2 * pi * (k-1) * fs * dij * k_optimal / c / N_FFT);
+else
+    Fn = 0.998;
+end
 
 switch method
     case 1
@@ -265,13 +272,13 @@ switch method
         % refer to "Roubust Recognition of Reverberant and noisy speech using 
         % coherence-based processing" 
         % braodside ,coherent+diffuse
+        
         k_optimal = 1;
-
         Fn = sin(2 * pi * k * fs * dij * k_optimal / c / N_FFT) ./ (2 * pi * k * fs * dij * k_optimal / c / N_FFT);
-        % Fn = sinc(2*pi*k*fs*d/(N_FFT*c));
+%         Fn = sinc(2*pi*k*fs*d/(N_FFT*c));
 
         DDR = (Fn - Fy_real) / ...
-            (Fy_real - 1+1e-6);
+            (Fy_real - 1);
         DDR = max(0,DDR);
         K = DDR / (DDR + 1);
 

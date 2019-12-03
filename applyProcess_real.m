@@ -10,7 +10,7 @@
 %
 % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% close all
+close all
 % clear all;
 %addpath(genpath('lib'));
 c = 340; % speed of sound
@@ -21,7 +21,7 @@ c = 340; % speed of sound
 fs = 16000;
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-M = size(x,2);
+
 %% 
 frameLength = 256;
 overlap = 128;
@@ -41,14 +41,25 @@ switch 1
         disp('other value')
 end
 
+% x = pcmread('../../../pcm/sound/631/test_631_front3/ETAudioDump_000.pcm',2);
+% % x = loadpcm('../sound/631/test_659_front/1/');
+% x = [x(:,2),x(:,1)]*10;
+% x = [x(1:1600000,2),x(1:1600000,1)];
+% d = 0.025;
+% fs = 16000;
+% x = downsample_48k_8k(x);
+x = pcmread('x.pcm',2);
+x = x(1:800000,:);
+x = [zeros(160,2);x];
+d = 0.025;
 x1 = x;
 
 %% process
 
-[ y,Fvv2,SNR] = process(x1,d);
+[ y,Fvv2,SNR] = process(x1,d,7);
 
 %% evaluate
-speech = sig.speech;
+% speech = sig.speech;
 % [pesq_mos]= pesq_vec(speech, out,fs)
 %rmpath(genpath('lib'));
 visual( x(:,1),y );
