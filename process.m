@@ -61,8 +61,8 @@ for frameIndex = 1:size(X,1)
     [aad_X_tilde] = ChannelWeighting(ad_X_Bar,G,aad_H);
     
 %     aad_X_tilde(1:8) = ad_X_Bar(1:8);
-%     Y(frameIndex,:) = aad_X_tilde;
-    Y(frameIndex,:) = Y(frameIndex,:).*G;
+    Y(frameIndex,:) = aad_X_tilde;
+%     Y(frameIndex,:) = Y(frameIndex,:).*G;
 %     Y(frameIndex,:) = squeeze(mean(X(frameIndex,:,:))).'.*G;
     
 end

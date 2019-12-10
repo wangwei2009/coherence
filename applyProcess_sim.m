@@ -40,7 +40,7 @@ end
 [ sig ] = sim.signal_simulation( r,slice );
 rmpath(genpath('E:\work\matlab\ehabets\ANF-Generator-master'));
 x = sig.x;
-
+rmpath(genpath('lib'));
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 M = size(x,2);
 %% 
@@ -56,11 +56,15 @@ x1 = x;
 [ y,Fvv2,SNR] = process(x1,d,7);
 
 %% evaluate
-speech = sig.speech;
-% [pesq_mos]= pesq_vec(speech, out,fs)
-rmpath(genpath('lib'));
-stoi(sig.clean_i(:,1),x(:,1),fs)        %% STOI for noisy speech
-stoi(sig.clean_i(1:length(y),1),y,fs)   %% STOI for processed speech
+speech = sig.clean_i(:,1);
+[pesq_mos_before] = pesq_vec(sig.clean_i(:,1),x(:,1),fs); %% PESQ for noisy speech
+[pesq_mos_after]= pesq_vec(speech, y,fs);                %% PESQ for processed speech
+pesq_score = [pesq_mos_before,pesq_mos_after]
+
+stoi_before = stoi(sig.clean_i(:,1),x(:,1),fs);        %% STOI for noisy speech
+stoi_after = stoi(sig.clean_i(1:length(y),1),y,fs);   %% STOI for processed speech
+stoi_score = [stoi_before,stoi_after]
+
 visual( x(:,1),y );
 % util.fig(out, fs);
 
