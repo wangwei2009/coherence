@@ -271,12 +271,7 @@ switch method
     case 7
         % refer to "Roubust Recognition of Reverberant and noisy speech using 
         % coherence-based processing" 
-        % braodside ,coherent+diffuse
-        
-        k_optimal = 1;
-        Fn = sin(2 * pi * k * fs * dij * k_optimal / c / N_FFT) ./ (2 * pi * k * fs * dij * k_optimal / c / N_FFT);
-%         Fn = sinc(2*pi*k*fs*d/(N_FFT*c));
-
+        % braodside ,coherent+diffuse        
         DDR = (Fn - Fy_real) / ...
             (Fy_real - 1);
         DDR = max(0,DDR);
@@ -284,6 +279,74 @@ switch method
 
         SNR = K;
         G = K;
+    case 8
+        %ESTIMATE_CDR_ROBUST_UNBIASED
+        % Unbiased estimation of the Coherent-to-Diffuse Ratio (CDR) from the complex
+        % coherence of a mixed (noisy) signal, using knowledge of both signal and noise
+        % coherence. This is a variation of estimate_cdr_unbiased which shows better
+        % performance in practice. Equivalent to CDRprop2 in [1].
+        %
+        % CDR = estimate_cdr_nodiffuse(X, N, S)
+        %       X: complex coherence of mixed (noisy) signal
+        %       N: coherence of noise component (real-valued)
+        %       S: coherence of signal component (magnitude one)
+        %
+        % Reference:
+        % Andreas Schwarz, Walter Kellermann, "Coherent-to-Diffuse Power Ratio
+        % Estimation for Dereverberation", IEEE/ACM Trans. on Audio, Speech and
+        % Lang. Proc., 2015 (under review); preprint available: arXiv:1502.03784
+        % PDF: http://arxiv.org/pdf/1502.03784
+        %
+        % Andreas Schwarz (schwarz@lnt.de)
+        % Multimedia Communications and Signal Processing
+        % Friedrich-Alexander-Universitaet Erlangen-Nuernberg (FAU)
+        % Cauerstr. 7, 91058 Erlangen, Germany
+        %function CDR = estimate_cdr_robust_unbiased(Cxx,Cnn,Css)
+        Cnn = Fn;
+        Css = ones(size(Fn));
+        Cxx = Fvv(1,2,k);
+%         Css = bsxfun(@times, ones(size(Cxx)), Css);
+%         Cnn = bsxfun(@times, ones(size(Cxx)), Cnn);
+
+        % limit the magnitude of Cxx to prevent numerical problems
+%         magnitude_threshold = 1-1e-10;
+%         critical = abs(Cxx)>magnitude_threshold;
+%         Cxx(critical) = magnitude_threshold .* Cxx(critical) ./ abs(Cxx(critical));
+
+        CDR = ...%1./(-abs(Cnn-exp(1j*angle(Css)))./(Cnn.*cos(angle(Css))-1)).*...
+              abs( ...
+             (exp(-1j*angle(Css)).*Cnn - (exp(-1i*angle(Css)).*Cxx))./...
+                   (real(exp(-1i*angle(Css)).*Cxx) - 1)...
+               );
+
+        % Ensure we don't get any negative or complex results due to numerical effects
+%         CDR = max(real(CDR),0);
+        G = CDR/(1+CDR);
+%         G = G^1.5;
+        SNR = G;
+        
+
+        %end
+    case 9
+        Cnn = Fn;
+        Css = ones(size(Fn));
+        Cxx = Fvv(1,2,k);
+%         Css = bsxfun(@times, ones(size(Cxx)), Css);
+%         Cnn = bsxfun(@times, ones(size(Cxx)), Cnn);
+% 
+%         % limit the magnitude of Cxx to prevent numerical problems
+%         magnitude_threshold = 1-1e-10;
+%         critical = abs(Cxx)>magnitude_threshold;
+%         Cxx(critical) = magnitude_threshold .* Cxx(critical) ./ abs(Cxx(critical));
+
+        CDR = real(exp(-1j*angle(Css)).*Cnn - (exp(-1i*angle(Css)).*Cxx))./(real(exp(-1i*angle(Css)).*Cxx) - 1);
+        % Ensure we don't get any negative or complex results due to numerical effects
+%         CDR = max(real(CDR),0);
+        CDR = max(0,CDR);
+        G = CDR/(1+CDR);
+        G = G^2;
+        SNR = G;
+        
 end
 
 G = max(G, Gmin);
